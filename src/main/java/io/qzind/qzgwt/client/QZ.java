@@ -3,6 +3,7 @@ package io.qzind.qzgwt.client;
 
 import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.json.client.JSONParser;
+import com.google.gwt.json.client.JSONString;
 import com.google.gwt.user.client.Window;
 import io.qzind.qzgwt.client.callback.Callback;
 import com.sksamuel.gwt.websockets.Websocket;
@@ -125,6 +126,29 @@ public class QZ {
         }
     }
 
+    public static void send(final String message, final Callback<String> callback) {
+        if (!isOpen) {
+            socket.open();
+            socket.addListener(new WebsocketListener() {
+                @Override
+                public void onClose() {
+                    isOpen = false;
+                }
+
+                @Override
+                public void onMessage(String s) {
+                }
+
+                @Override
+                public void onOpen() {
+                    doMessage(message, callback);
+                }
+            });
+        } else {
+            doMessage(message, callback);
+        }
+    }
+
     private static String generateUUID() {
         return UUID.uuid().replaceAll("-", "");
     }
@@ -179,6 +203,14 @@ public class QZ {
         printData.setTimeStamp(new Date().getTime());
         printData.setUUID(uid);
         socket.send(printData.toString());
+    }
+
+    private static void doMessage(String message, Callback<String> callback) {
+        final String uid = generateUUID();
+        JSONObject jsonObject = JSONParser.parseStrict(message).isObject();
+        jsonObject.put("uid", new JSONString(uid));
+        callbackMap.put(uid, callback);
+        socket.send(jsonObject.toString());
     }
 
     public static native void log(String msg) /*-{
