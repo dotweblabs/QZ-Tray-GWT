@@ -22,7 +22,7 @@ public class QZ {
     static Websocket socket;
     static OpenCallback wsConnectCallback = null;
     static final Map<String,Callback<String>> callbackMap = new LinkedHashMap<>();;
-
+    static private Timer t;
     static {
         socket = new Websocket("ws://localhost:8182/");
         socket.addListener(new WebsocketListener() {
@@ -43,17 +43,17 @@ public class QZ {
                 wsConnectCallback.onOpen();
             }
         });
-    }
-
-    public static void connect(final OpenCallback callback) {
-        wsConnectCallback = callback;
-        socket.open();
-        Timer t = new Timer() {
+        t = new Timer() {
             @Override
             public void run() {
                 socket.send("ping");
             }
         };
+    }
+
+    public static void connect(final OpenCallback callback) {
+        wsConnectCallback = callback;
+        socket.open();
         t.schedule(1000 * 60);
     }
     public static void find(String printer, Callback<String> callback) {
@@ -137,6 +137,7 @@ public class QZ {
 
                 @Override
                 public void onMessage(String s) {
+                    callback.onMessage(s);
                 }
 
                 @Override
