@@ -30,6 +30,7 @@ public class QZ {
             public void onClose() {
                 log("SOCKET CLOSE");
                 isOpen = false;
+                wsConnectCallback.onClose();
             }
             @Override
             public void onMessage(String s) {

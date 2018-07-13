@@ -25,6 +25,11 @@ public class QzTrayTest extends GWTTestCase {
             public void onOpen() {
                 finishTest();
             }
+
+            @Override
+            public void onClose() {
+                fail();
+            }
         });
     }
 
@@ -40,6 +45,11 @@ public class QzTrayTest extends GWTTestCase {
                         finishTest();
                     }
                 });
+            }
+
+            @Override
+            public void onClose() {
+                fail();
             }
         });
     }
@@ -57,6 +67,11 @@ public class QzTrayTest extends GWTTestCase {
                         finishTest();
                     }
                 });
+            }
+
+            @Override
+            public void onClose() {
+                fail();
             }
         });
     }
@@ -76,6 +91,11 @@ public class QzTrayTest extends GWTTestCase {
                         finishTest();
                     }
                 });
+            }
+
+            @Override
+            public void onClose() {
+                fail();
             }
         });
     }
