@@ -55,7 +55,7 @@ public class QZ {
     public static void connect(final OpenCallback callback) {
         wsConnectCallback = callback;
         socket.open();
-        t.schedule(1000 * 60);
+        t.scheduleRepeating(1000 * 10);
     }
     public static void find(String printer, Callback<String> callback) {
         // TODO
